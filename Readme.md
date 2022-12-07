@@ -21,5 +21,38 @@ docker run -it busybox
 Остановить
 docker stop либо exit
 
-Уберёт все остановившиеся контейнеры
+Удалить все остановившиеся контейнеры
 docker container prune
+
+Запустить в фоновом режиме -d= detached (отсоединённый)
+docker run -d ngix
+
+Увидеть детали
+docker conteiner inspect <id-or-name>
+
+
+--name даёт название контейнеру
+docker run -d --name my_nginx nginx
+
+8080 - внешний порт, 80 порт контейнера, nginx название образа -p = publish
+docker run -p 8080:80 nginx
+
+-v=Подключение тома(volume)
+${PWD}=путь к локальной папке
+/usr/share/..=путь к папке внутри контейнера
+docker run -v${PWD}:/usr/share/nginx/html nginx
+
+В файле .html достаточно добавить один восклицательный знак, чтобы добавить начальные строки кода
+
+Мэппинг томов
+Полностью будет выглядеть так
+docker run -v ${PWD}:/usr/share/nginx/html -p 8080:80 -d nginx
+
+Остановить контейнер
+docker stop <id-or-name>
+
+exec=выполняет команду в запущенном контейнере bash=название процесса
+docker exec -it <id> bash
+
+--rm сразу удаляет контейнер
+docker run -it --rm busybox
