@@ -1,0 +1,11 @@
+docker run
+--name web-server
+-v /opt/web/html:/var/www/html
+-v /opt/web/pics:/var/www/pictures
+-e NGINX_HOST=web.romnero.de
+-e NGINX_PORT=80
+-d
+-p 80:80
+-p 443:443
+-net webnet
+nginx:stable

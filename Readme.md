@@ -56,3 +56,20 @@ docker exec -it <id> bash
 
 --rm сразу удаляет контейнер
 docker run -it --rm busybox
+
+\ <--нужен для перехода
+Можно таким образом разбивать команду на строки
+
+```
+docker run \
+--name my-nginx \
+-v ${PWD}:/usr/share/nginx/html \
+-p 8888:80
+-d \
+--rm \
+nginx
+```
+
+Вывод всей информации
+docker container inspect my-ngnix
+
