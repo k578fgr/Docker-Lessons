@@ -73,3 +73,11 @@ nginx
 Вывод всей информации
 docker container inspect my-ngnix
 
+#Точка путь к Dockerfile
+Запуск процесса создания образа
+docker build .
+
+#-t=Добавление имени и тэга для образа, my-calendar=Название образа,
+4.1.3=опциональный тэг
+Если тэг опустить, то будет сразу latest
+docker build . -t my-calendar:4.1.4
