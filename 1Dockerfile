@@ -1,0 +1,8 @@
+#Имя базового образа-python, Тэг (версия) базового образа
+FROM python:alpine
+
+WORKDIR /app
+
+COPY ..
+
+CMD [ "python", main.py]
