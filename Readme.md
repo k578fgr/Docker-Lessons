@@ -85,3 +85,9 @@ docker build . -t my-calendar:4.1.4
 docker-compose up
 
 docker-compose up -d
+
+Останавливает и удаляет
+docker-compose down
+
+Чтобы поменять что-то внутри то
+docker-compose up -d --build
