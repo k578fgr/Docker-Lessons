@@ -82,3 +82,6 @@ docker build .
 Если тэг опустить, то будет сразу latest
 docker build . -t my-calendar:4.1.4
 
+docker-compose up
+
+docker-compose up -d
