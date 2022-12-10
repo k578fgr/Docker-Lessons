@@ -81,3 +81,4 @@ docker build .
 4.1.3=опциональный тэг
 Если тэг опустить, то будет сразу latest
 docker build . -t my-calendar:4.1.4
+
