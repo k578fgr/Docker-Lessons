@@ -1,15 +1,14 @@
-version: "3.5"
 services:
-  web-server:
-    image: postgres:14
-    container_name: mynginx
-    volumes:
-      - /opt/web/html:/var/www/html
-      - /opt/web/pics:/var/wwww/pictures
-    environment:
-      - NGINX_HOST=web.rommnero.de
-      - NGINX_PORT=80
+  api:
+    # ... other Nest container configs
+    depends_on:
+      - redis
+  redis: # Name of container
+    image: redis
     ports:
-      -"80:80"
-      -"443:443"
-    restart:unless-stopped # always/no/on-failure
+      - 6379:6379
+    volumes:
+      - redis:/data
+volumes:
+  redis:
+    driver: local
