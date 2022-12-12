@@ -1,14 +1,15 @@
 services:
   api:
-    # ... other Nest container configs
-    depends_on:
-      - redis
-  redis: # Name of container
-    image: redis
-    ports:
-      - 6379:6379
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
     volumes:
-      - redis:/data
-volumes:
-  redis:
-    driver: local
+      - .:/usr/src/app
+    env_file:
+    - .env
+    # Run a command against the development stage of the image
+    command: npm run start:dev
+    ports:
+      - 3000:3000
