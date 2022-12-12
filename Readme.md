@@ -81,3 +81,13 @@ docker build .
 4.1.3=опциональный тэг
 Если тэг опустить, то будет сразу latest
 docker build . -t my-calendar:4.1.4
+
+docker-compose up
+
+docker-compose up -d
+
+Останавливает и удаляет
+docker-compose down
+
+Чтобы поменять что-то внутри то
+docker-compose up -d --build
