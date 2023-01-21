@@ -1,0 +1,15 @@
+Install docker устанавливаем пакеты
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+
+Конфиг менеджер на Centos добавляем репо на Докер
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+Install Docker:
+sudo yum -y install docker-ce
+
+
+Enable the Docker daemon:
+sudo systemctl enable --now docker
+
+Add the lab user to the docker group: добавляем пользователя в группу докер
+sudo usermod -aG docker cloud_user
