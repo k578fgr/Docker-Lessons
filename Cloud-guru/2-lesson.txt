@@ -69,3 +69,4 @@ Remove the nginx container:
 docker rm nginx
 Verify that the container has been removed:
 docker ps -a
+

@@ -1,0 +1,8 @@
+(itd it - интерактивный, d - detach отсоединённый, rm - удалится после взаимодействия -- name даёт имя, busybox - программа)
+docker run --itd --rm --name thor busybox
+
+команда, показывает к кому подключён контейнер 
+bridge link
+
+Узнать ip адрес, имя
+sudo docker inspect bridge
