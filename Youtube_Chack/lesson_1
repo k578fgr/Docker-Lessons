@@ -6,3 +6,8 @@ bridge link
 
 Узнать ip адрес, имя
 sudo docker inspect bridge
+
+Зайти в shell контейнер
+sudo docker exec -it thor sh
+
+docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.168.0.1 --ip-range |
