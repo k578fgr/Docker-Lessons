@@ -1,0 +1,60 @@
+Установка S3 BUCKET
+
+Storing Container Data In Docker Volumes
+Configuration and Installation
+
+Флаг --user команды pip install сообщает pip, что мы хотим установить пакет в глобальное окружение текущего пользователя. 
+Если этот флаг не указать, то pip установит пакет в общесистемное окружение. .
+pip install --upgrade --user awscli
+
+Configure the CLI:
+aws configure
+
+Enter the following:
+AWS Access Key ID: <ACCESS_KEY_ID>
+AWS Secret Access Key: <SECRET_ACCESS_KEY>
+Default region name: us-east-1
+Default output format: json
+Copy the CLI configuration to the root user:
+sudo cp -r ~/.aws /root
+
+Install the s3fs package
+FUSE (англ. filesystem in userspace — «файловая система в пользовательском пространстве»
+
+sudo yum install s3fs-fuse -y
+Prepare the Bucket
+Create a mount point for the s3 bucket:
+sudo mkdir /mnt/widget-factory
+Export the bucket name:
+export BUCKET=<S3_BUCKET_NAME>
+
+Примонтировать образ -o (provide=добавить) allow_other=не привилигированные юзеры могут менять данные,
+default_acl=те привелегии пользователей, что назначены в облаке, так же будут назначены в бакете
+use_cache=позволит сохранять файлы локально
+Mount the S3 bucket:
+sudo s3fs $BUCKET /mnt/widget-factory -o allow_other -o default_acl=public-read -o use_cache=/tmp/s3fs
+
+Verify that the bucket was mounted successfully:
+ll /mnt/widget-factory
+Copy the website files to the s3 bucket:
+cp -r ~/widget-factory-inc/web/* /mnt/widget-factory
+Verify the files are in the folder:
+ll /mnt/widget-factory
+Verify the files are in the s3 bucket:
+aws s3 ls s3://$BUCKET
+Use the S3 Bucket Files in a Docker Container
+
+--mount=примонтировать s3 bucket к docker, type?, source=куда монтировать, target= место назначения
+Run an httpd container using the S3 bucket:
+docker run -d --name web1 -p 80:80 --mount type=bind,source=/mnt/widget-factory,target=/usr/local/apache2/htdocs,readonly httpd:2.4
+In a web browser, verify connectivity to the container:
+<SERVER_PUBLIC_IP_ADDRESS>
+Check the bucket cache:
+Change to the /mnt/widget-factory/ directory:
+cd /mnt/widget-factory
+Create a new page within the bucket:
+cp index.html newPage.html
+In a web browser, verify that the new page is accessible:
+<SERVER_PUBLIC_IP_ADDRESS>/newPage.html
+Verify that the page was added to the bucket:
+aws s3 ls $BUCKET
