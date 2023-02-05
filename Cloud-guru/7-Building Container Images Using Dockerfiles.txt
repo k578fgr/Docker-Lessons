@@ -20,6 +20,8 @@ export showLayers='{{ range .RootFS.Layers }}{{ println . }}{{end}}'
 export showSize='{{ .Size }}'
 Compare the httpd and widgetfactory images:
 docker images
+
+-f означает (format)
 Show the widgetfactory image's size:
 docker inspect -f "$showSize" widgetfactory:0.1
 Show the layers:
