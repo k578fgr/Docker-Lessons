@@ -1,0 +1,103 @@
+Load Balancing Containers
+
+Create a Docker Compose file
+On Swarm Server 1
+
+Change to the lb-challenge directory:
+
+ cd lb-challenge
+Create our Docker compose file:
+
+ vi docker-compose.yml
+The contents of your docker-compose.yml file should look like the following:
+
+version: '3.2'
+services:
+  weather-app1:
+      build: ./weather-app
+      tty: true
+      networks:
+       - frontend
+  weather-app2:
+      build: ./weather-app
+      tty: true
+      networks:
+       - frontend
+  weather-app3:
+      build: ./weather-app
+      tty: true
+      networks:
+       - frontend
+
+  loadbalancer:
+      build: ./load-balancer
+      image: nginx
+      tty: true
+      ports:
+       - '80:80'
+      networks:
+       - frontend
+
+networks:
+  frontend:
+Update nginx.conf
+Change to the load-balancer directory:
+
+ cd load-balancer
+Edit the nginx.conf file:
+
+ vi nginx.conf
+The contents of your nginx.conf file should look like the following:
+
+events { worker_connections 1024; }
+
+http {
+  upstream localhost {
+    server weather-app1:3000;
+    server weather-app2:3000;
+    server weather-app3:3000;
+  }
+  server {
+    listen 80;
+    server_name localhost;
+    location / {
+      proxy_pass http://localhost;
+      proxy_set_header Host $host;
+    }
+  }
+}
+Execute docker-compose up
+Change directories:
+
+ cd ../
+Execute a docker-compose up:
+
+docker-compose up --build -d
+Check our work:
+
+ docker ps
+Copy the public IP address of Swarm Server 1 and paste it into a new tab in your browser.
+
+Create a Docker service using Docker Swarm
+Change to the root directory:
+
+ cd ~/
+View the contents of swarm-token.txt:
+
+ cat swarm-token.txt
+Copy the docker swarm join command from the previous step.
+
+On Swarm Server 2
+
+Execute the command that was copied from the previous step.
+On Swarm Server 1
+
+Create a Docker service by executing the following command:
+
+docker service create --name nginx-app --publish published=8080,target=80 --replicas=2 nginx
+Verify this completed successfully by running the following command on both servers:
+
+ docker ps
+Verify that the default nginx page loads in the browser:
+
+ PUBLIC_IP_ADDRESS:8080

@@ -1,0 +1,77 @@
+Updating Containers with Watchtower
+Avg. Completion Time
+
+Create the Docker file
+Let's create the Docker file in a text editor (we're using vi):
+
+vi Dockerfile
+We need to set these parameters and conditions:
+
+The base image should be node.
+Using the RUN instruction, make a directory called /var/node.
+Use the ADD instruction to add the contents of the code directory into /var/node.
+Make /var/node the working directory.
+Execute an npm install.
+Set ./bin/www as the command.
+From the command line, log in to Docker Hub.
+Build your image using <USERNAME>/express.
+Push the image to Docker Hub.
+When we're finished, the file should look like this:
+
+FROM node
+
+RUN mkdir -p /var/node
+ADD content-express-demo-app/ /var/node/
+WORKDIR /var/node
+RUN npm install
+CMD ./bin/www
+Log in to Docker Hub
+We've got to build our Docker image, but before we do that, let's get logged into our Docker Hub account. Do it from the command line, like this:
+
+docker login
+Build the Docker Image
+Now we can build the image, where <USERNAME> in the command is your Docker Hub username:
+
+docker build -t <USERNAME>/express -f Dockerfile .
+Push the Image to Docker Hub
+Push the image up to Docker Hub with this:
+
+docker push <USERNAME>/express
+If we log into the Docker Hub with a web browser, we should see the image in our repository.
+
+Create the Demo Container
+In order for Watchtower to watch anything, we've got to give it something to keep an eye on. We're going to create a Docker container and set some parameters, all in one command:
+
+docker run -d --name demo-app -p 80:3000 --restart always <USERNAME>/express
+To make sure it's running, let's execute a quick docker ps. We should see it in the list.
+
+Create the Watchtower Container
+Now we'll spin up Watchtower to watch our demo-app container. We can create the Watchtower container with this:
+
+docker run -d --name watchtower --restart always -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower -i 30
+Again, run a docker ps real quick to make sure this container spun up properly.
+
+Testing
+We want to see if Watchtower is actually keeping watch, so we've got to take a couple more steps.
+
+Update the Docker Image
+We're going to edit Dockererfile, rebuild the image, then push the new one up to Docker Hub.
+
+Edit Dockerimage, and let's make a simple change, like a mkdir command. Add it below the existing one, so that the file looks like this now:
+
+FROM node
+
+RUN mkdir -p /var/node
+RUN mkdir -p /var/test
+ADD content-express-demo-app/ /var/node/
+WORKDIR /var/node
+RUN npm install
+CMD ./bin/www
+Rebuild the image with this:
+
+docker build -t <USERNAME>/express -f Dockerfile .
+Now push it up to Docker Hub:
+
+docker push <USERNAME>/express
+Watch the Magic of Watchtower
+Since we set the interval at 30 seconds (the -i in the last docker run command we ran), then our Watchtower container should be checking for updates every 30 seconds. And if we run docker ps in a little bit, we're going to see that the demo-app container gets updated.

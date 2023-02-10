@@ -1,0 +1,100 @@
+Adding Metadata and Labels
+
+Log in to the Docker Server and Docker Workstation lab servers using the credentials provided on the hands-on lab page:
+
+ssh cloud_user@<PUBLIC_IP_ADDRESS>
+Become the root user:
+
+sudo su -
+Create a Dockerfile
+On Docker Workstation:
+
+Create a Dockerfile:
+
+[root@docker_workstation]# vi Dockerfile
+Use the following instructions:
+
+Note: Replace EMAIL_ADDRESS with your email address.
+
+FROM node
+
+LABEL maintainer="EMAIL_ADDRESS"
+
+ARG BUILD_VERSION
+ARG BUILD_DATE
+ARG APPLICATION_NAME
+
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL org.label-schema.application=$APPLICATION_NAME
+LABEL org.label-schema.version=$BUILD_VERSION
+
+RUN mkdir -p /var/node
+ADD weather-app/ /var/node/
+WORKDIR /var/node
+RUN npm install
+EXPOSE 3000
+CMD ./bin/www
+Build the Docker Image
+Log in to Docker Hub:
+
+[root@docker_workstation]# docker login
+Build the Docker image using the following parameters:
+
+Note: Be sure to replace <DOCKER_USERNAME> with your Docker Hub username.
+
+[root@docker_workstation]# docker build -t <DOCKER_USERNAME>/weather-app --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+--build-arg APPLICATION_NAME=weather-app --build-arg BUILD_VERSION=v1.0 -f Dockerfile .
+Show image ID:
+
+[root@docker_workstation]# docker images
+Use image ID to inspect:
+
+[root@docker_workstation]# docker inspect <IMAGE_ID>
+Push the Image to Docker Hub
+Push the weather-app image to Docker Hub.
+
+Note: Be sure to replace <DOCKER_USERNAME> with your Docker Hub username.
+
+[root@docker_workstation]# docker push <DOCKER_USERNAME>/weather-app
+Create the weather-app Container
+On the Docker Server:
+
+Start the weather-app container.
+
+Note: Be sure to replace <DOCKER_USERNAME> with your Docker Hub username.
+
+[root@docker_server]# docker run -d --name weather-app -p 80:3000 --restart always <DOCKER_USERNAME>/weather-app
+Verify the image is running:
+
+[root@docker_server]# docker ps
+Check Out Version 1.1 of the Weather App
+On the Docker Workstation:
+
+In the weather-app directory, check out version 1.1 of the weather app:
+
+[root@docker_workstation]# cd weather-app
+[root@docker_workstation]# git checkout v1.1
+[root@docker_workstation]# git branch
+[root@docker_workstation]# cd ../
+Rebuild the weather-app Image
+Rebuild and push the weather-app image.
+
+Note: Be sure to replace <DOCKER_USERNAME> with your Docker Hub username.
+
+[root@docker_workstation]# docker build -t <DOCKER_USERNAME>/weather-app --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+--build-arg APPLICATION_NAME=weather-app --build-arg BUILD_VERSION=v1.1  -f Dockerfile .
+Just to double check, inspect the image (running docker images first to get the image ID):
+
+[root@docker_workstation]# docker inspect <IMAGE_ID>
+We should be running v1.1 now, so let's push it up:
+
+[root@docker_workstation]# docker push <DOCKER_USERNAME>/weather-app
+On the Docker Server:
+
+Show image status:
+
+[root@docker_server]# docker ps
+Using the container ID from the previous command, inspect the weather-app image:
+
+[root@docker_server]# docker inspect <IMAGE_ID>
+This one should also be at v1.1.
