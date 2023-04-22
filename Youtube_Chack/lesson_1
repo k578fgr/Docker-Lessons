@@ -1,8 +1,17 @@
+-f (folder) путь до файла up -d (detache)
+docker-compose -f roco.yml up -d
+
+Где stage - имя
+docker stack deploy -c roco.yml stage
+
 (itd it - интерактивный, d - detach отсоединённый, rm - удалится после взаимодействия -- name даёт имя, busybox - программа)
 docker run --itd --rm --name thor busybox
 
 команда, показывает к кому подключён контейнер 
 bridge link
+
+Запустить докерфайл
+docker build -t analytics .
 
 Узнать ip адрес, имя
 sudo docker inspect bridge
@@ -11,3 +20,5 @@ sudo docker inspect bridge
 sudo docker exec -it thor sh
 
 docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.168.0.1 --ip-range |
+
+
